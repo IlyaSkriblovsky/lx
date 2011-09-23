@@ -9,7 +9,7 @@ namespace lx
 {
 
 
-ScalableButton::ScalableButton(Widget* parent, ScalableButtonStyle* style)
+ScalableButton::ScalableButton(Widget* parent, const ScalableButtonStyle* style)
     : Widget(parent), _style(style), _pressed(false)
 {
     setSize(
@@ -22,8 +22,6 @@ ScalableButton::ScalableButton(Widget* parent, ScalableButtonStyle* style)
 
 void ScalableButton::paint(const Rect& rect)
 {
-    printf("ScalableButton::paint "); rect.print();
-
     if (_pressed)
         _style->pressedBackground()->drawOnCanvas(this, Rect(Point(), size()));
     else
@@ -32,8 +30,8 @@ void ScalableButton::paint(const Rect& rect)
     Image* content = _style->content();
 
     drawImage(content, Point(
-        (size().w - content->size().w) / 2,
-        (size().h - content->size().h) / 2
+        (size().w - content->size().w) / 2 + (_pressed ? _style->contentOffset().x : 0),
+        (size().h - content->size().h) / 2 + (_pressed ? _style->contentOffset().y : 0)
     ));
 }
 

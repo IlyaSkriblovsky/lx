@@ -1,6 +1,8 @@
 #ifndef __LX__SCALABLEBUTTONSTYLE_H
 #define __LX__SCALABLEBUTTONSTYLE_H
 
+#include <lx/Point.h>
+
 #include "WidgetStyle.h"
 
 namespace lx
@@ -16,10 +18,11 @@ class ScalableButtonStyle: public WidgetStyle
         ScalableButtonStyle(
             BorderImage* normalBackground,
             BorderImage* pressedBackground,
-            Image* content
+            Image* content,
+            const Point& contentOffset = Point()
         ): _normalBackground(normalBackground),
            _pressedBackground(pressedBackground),
-           _content(content)
+           _content(content), _contentOffset(contentOffset)
         {
         }
 
@@ -27,11 +30,13 @@ class ScalableButtonStyle: public WidgetStyle
         BorderImage* normalBackground() const { return _normalBackground; }
         BorderImage* pressedBackground() const { return _pressedBackground; }
         Image* content() const { return _content; }
+        Point contentOffset() const { return _contentOffset; }
 
     private:
         BorderImage* _normalBackground;
         BorderImage* _pressedBackground;
         Image* _content;
+        Point _contentOffset;
 };
 
 

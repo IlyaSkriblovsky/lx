@@ -12,7 +12,7 @@ class ScalableButtonStyle;
 class ScalableButton: public Widget
 {
     public:
-        ScalableButton(Widget* parent, ScalableButtonStyle* style);
+        ScalableButton(Widget* parent, const ScalableButtonStyle* style);
 
         Delegate0<> onClick;
 
@@ -23,7 +23,7 @@ class ScalableButton: public Widget
         virtual void mouseRelease(const Point& point);
 
     private:
-        ScalableButtonStyle* _style;
+        const ScalableButtonStyle* _style;
 
         bool _pressed;
 };
