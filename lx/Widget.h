@@ -61,6 +61,9 @@ class Widget: public Canvas
 
 
         virtual void paint(const Rect& dirty);
+        void repaint(const Rect& dirty);
+
+
         virtual void mousePress(const Point& point);
         virtual void mouseRelease(const Point& point);
         virtual void mouseMove(const Point& point);

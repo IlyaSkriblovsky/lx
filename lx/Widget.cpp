@@ -115,6 +115,15 @@ void Widget::paint(const Rect& dirty)
 }
 
 
+void Widget::repaint(const Rect& dirty)
+{
+    if (_parent)
+        _parent->repaint(dirty + position());
+    else
+        paint(dirty);
+}
+
+
 void Widget::mousePress(const Point& point)
 {
 }

@@ -158,7 +158,8 @@ void Window::processXEvent(XEvent *event)
 
 void Window::paint(const Rect& rect)
 {
-    fillRect(rect, 0xffebeced);
+    fillRect(rect, 0xff000000);
+    printf("Window::paint "); rect.print();
 
     Widget::paint(rect);
 }

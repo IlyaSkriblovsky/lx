@@ -22,6 +22,8 @@ ScalableButton::ScalableButton(Widget* parent, ScalableButtonStyle* style)
 
 void ScalableButton::paint(const Rect& rect)
 {
+    printf("ScalableButton::paint "); rect.print();
+
     if (_pressed)
         _style->pressedBackground()->drawOnCanvas(this, Rect(Point(), size()));
     else
@@ -40,14 +42,14 @@ void ScalableButton::mousePress(const Point& point)
 {
     _pressed = true;
 
-    paint(Rect(Point(), size()));
+    repaint(Rect(Point(), size()));
 }
 
 void ScalableButton::mouseRelease(const Point& point)
 {
     _pressed = false;
 
-    paint(Rect(Point(), size()));
+    repaint(Rect(Point(), size()));
 
     if (onClick) onClick();
 }
