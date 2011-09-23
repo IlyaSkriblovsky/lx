@@ -11,7 +11,7 @@ LinkedList<Window*> Window::_windows;
 
 
 Window::Window(Display *display, bool rgba)
-    : Widget(0), _display(display), _rgba(rgba)
+    : Widget(0), _display(display), _rgba(rgba), _mouseGrabber(0)
 {
     _windows.append(this);
 
@@ -117,34 +117,38 @@ void Window::processXEvent(XEvent *event)
         case ButtonPress:
         {
             Point p = Point(event->xbutton.x, event->xbutton.y);
-            printf("ButtonPress: "); p.print();
-            mousePress(p);
+            Widget* child = childAt(p);
+            child->mousePress(p - child->absolutePosition());
+
+            _mouseGrabber = child;
+
             break;
         }
 
         case ButtonRelease:
         {
             Point p = Point(event->xbutton.x, event->xbutton.y);
-            printf("ButtonRelease: "); p.print();
-            mouseRelease(p);
+            Widget* child = _mouseGrabber ? _mouseGrabber : childAt(p);
+            child->mouseRelease(p - child->absolutePosition());
             break;
         }
 
         case MotionNotify:
         {
             Point p;
-            ::Window root, child;
+            ::Window rootXWin, childXWin;
             int rootx, rooty;
             unsigned int mask;
             XQueryPointer(
                 _display->xdisplay(), _xwindow,
-                &root, &child,
+                &rootXWin, &childXWin,
                 &rootx, &rooty,
                 &p.x, &p.y,
                 &mask
             );
-            printf("MouseMove: "); p.print();
-            mouseMove(p);
+
+            Widget* child = _mouseGrabber ? _mouseGrabber : childAt(p);
+            child->mouseMove(p - child->absolutePosition());
             break;
         }
     }
@@ -154,7 +158,7 @@ void Window::processXEvent(XEvent *event)
 
 void Window::paint(const Rect& rect)
 {
-    fillRect(rect, 0xebeced);
+    fillRect(rect, 0xffebeced);
 
     Widget::paint(rect);
 }

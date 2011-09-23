@@ -94,6 +94,17 @@ bool Widget::rgba() const
 
 
 
+Widget* Widget::childAt(const Point& point)
+{
+    for (LinkedList<Widget*>::Iter i = _childs.head(); i; i++)
+        if ((*i)->rect().contains(point))
+            return (*i)->childAt(point - (*i)->position());
+
+    return this;
+}
+
+
+
 void Widget::paint(const Rect& dirty)
 {
     for (LinkedList<Widget*>::Iter i = _childs.head(); i; i++)
@@ -106,34 +117,16 @@ void Widget::paint(const Rect& dirty)
 
 void Widget::mousePress(const Point& point)
 {
-    for (LinkedList<Widget*>::Iter i = _childs.tail(); i; i--)
-        if ((*i)->rect().contains(point))
-        {
-            (*i)->mousePress(point - (*i)->position());
-            break;
-        }
 }
 
 
 void Widget::mouseRelease(const Point& point)
 {
-    for (LinkedList<Widget*>::Iter i = _childs.tail(); i; i--)
-        if ((*i)->rect().contains(point))
-        {
-            (*i)->mouseRelease(point - (*i)->position());
-            break;
-        }
 }
 
 
 void Widget::mouseMove(const Point& point)
 {
-    for (LinkedList<Widget*>::Iter i = _childs.tail(); i; i--)
-        if ((*i)->rect().contains(point))
-        {
-            (*i)->mouseMove(point - (*i)->position());
-            break;
-        }
 }
 
 

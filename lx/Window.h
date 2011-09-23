@@ -41,6 +41,9 @@ namespace lx
             virtual void paint(const Rect& rect);
 
         private:
+            static LinkedList<Window*> _windows;
+
+
             Display* _display;
 
             ::Window _xwindow;
@@ -49,8 +52,7 @@ namespace lx
 
             bool _rgba;
 
-
-            static LinkedList<Window*> _windows;
+            Widget* _mouseGrabber;
     };
 
 }

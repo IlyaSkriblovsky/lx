@@ -56,8 +56,11 @@ class Widget: public Canvas
 
         virtual bool rgba() const;
 
+        Widget* childAt(const Point& point);
+
+
+
         virtual void paint(const Rect& dirty);
-    protected:
         virtual void mousePress(const Point& point);
         virtual void mouseRelease(const Point& point);
         virtual void mouseMove(const Point& point);

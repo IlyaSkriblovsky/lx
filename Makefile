@@ -1,12 +1,12 @@
-SUBDIRS = lx test
-
 all:
-	@for i in $(SUBDIRS); do \
-	(cd $$i; $(MAKE) $(MFLAGS) all); done
+	make -C lx
+	make -C widgets
+	make -C test
 
 clean:
-	@for i in $(SUBDIRS); do \
-	(cd $$i; $(MAKE) $(MFLAGS) $@); done
+	make -C lx clean
+	make -C widgets clean
+	make -C test clean
 
 
-.PHONY: all
+.PHONY: all clean
