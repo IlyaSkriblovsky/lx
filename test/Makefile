@@ -1,7 +1,7 @@
 SOURCES = lxtest.cpp
 
-CFLAGS = -I ../lx
-LIBS = -lX11 -lXrender -lImlib2
+CFLAGS = -I../lx `pkg-config --cflags x11 xrender imlib2`
+LIBS = `pkg-config --libs x11 xrender imlib2`
 
 
 OBJS = $(SOURCES:%.cpp=%.o)
