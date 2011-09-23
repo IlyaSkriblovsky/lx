@@ -12,7 +12,7 @@ SOURCES = \
     BorderImage.cpp
 
 
-CFLAGS = `pkg-config --cflags x11`
+CFLAGS = -g `pkg-config --cflags x11`
 
 
 OBJS = $(SOURCES:%.cpp=%.o)

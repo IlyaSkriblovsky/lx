@@ -2,7 +2,7 @@ SOURCES = \
     ScalableButton.cpp
 
 
-CFLAGS = -I.. `pkg-config --cflags x11`
+CFLAGS = -g -I.. `pkg-config --cflags x11`
 
 OBJS = $(SOURCES:%.cpp=%.o)
 

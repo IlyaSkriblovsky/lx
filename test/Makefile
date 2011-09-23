@@ -1,6 +1,6 @@
 SOURCES = lxtest.cpp
 
-CFLAGS = -I.. `pkg-config --cflags x11 xrender imlib2`
+CFLAGS = -g -I.. `pkg-config --cflags x11 xrender imlib2`
 LIBS = `pkg-config --libs x11 xrender imlib2`
 
 
