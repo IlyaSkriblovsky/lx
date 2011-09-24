@@ -1,5 +1,7 @@
 SOURCES = \
-    ScalableButton.cpp
+    ScalableButton.cpp  \
+    Slider.cpp          \
+    SimpleButton.cpp
 
 
 CFLAGS = -g -I.. `pkg-config --cflags x11`

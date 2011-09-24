@@ -33,7 +33,7 @@ void Canvas::copyCanvas(const Canvas* canvas, const Rect& src, const Point& orig
 {
     Point offset = absolutePosition();
 
-    if (! canvas->rgba())
+    if (rgba() == false && canvas->rgba() == false)
     {
         XCopyArea(
             display()->xdisplay(),
@@ -66,6 +66,9 @@ void Canvas::copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& 
         return;
     }
 
+    if (dst.size.w <= 0 || dst.size.h <= 0)
+        return;
+
     XTransform xform = {{
         { XDoubleToFixed((double)src.size.w / dst.size.w), XDoubleToFixed(0), XDoubleToFixed(src.origin.x) },
         { XDoubleToFixed(0), XDoubleToFixed((double)src.size.h / dst.size.h), XDoubleToFixed(src.origin.y) },
@@ -93,13 +96,29 @@ void Canvas::copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& 
 }
 
 
-void Canvas::fillRect(const Rect& rect, unsigned int color)
+void Canvas::drawRectangle(const Rect& rect, unsigned int color)
 {
+    Point offset = absolutePosition();
+
+    XSetForeground(display()->xdisplay(), xgc(), color);
+
+    XDrawRectangle(
+        display()->xdisplay(), xdrawable(), xgc(),
+        rect.origin.x + offset.x, rect.origin.y + offset.y,
+        rect.size.w, rect.size.h
+    );
+}
+
+
+void Canvas::fillRectangle(const Rect& rect, unsigned int color)
+{
+    Point offset = absolutePosition();
+
     XSetForeground(display()->xdisplay(), xgc(), color);
 
     XFillRectangle(
         display()->xdisplay(), xdrawable(), xgc(),
-        rect.origin.x, rect.origin.y,
+        rect.origin.x + offset.x, rect.origin.y + offset.y,
         rect.size.w, rect.size.h
     );
 }

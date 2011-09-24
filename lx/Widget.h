@@ -61,6 +61,7 @@ class Widget: public Canvas
 
 
         virtual void paint(const Rect& dirty);
+        void repaint();
         void repaint(const Rect& dirty);
 
 

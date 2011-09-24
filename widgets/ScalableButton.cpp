@@ -40,14 +40,14 @@ void ScalableButton::mousePress(const Point& point)
 {
     _pressed = true;
 
-    repaint(Rect(Point(), size()));
+    repaint();
 }
 
 void ScalableButton::mouseRelease(const Point& point)
 {
     _pressed = false;
 
-    repaint(Rect(Point(), size()));
+    repaint();
 
     if (onClick) onClick();
 }

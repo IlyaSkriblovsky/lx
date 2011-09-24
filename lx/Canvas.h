@@ -32,7 +32,8 @@ class Canvas
 
         void copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& dst);
 
-        void fillRect(const Rect& rect, unsigned int color);
+        void drawRectangle(const Rect& rect, unsigned int color);
+        void fillRectangle(const Rect& rect, unsigned int color);
 };
 
 

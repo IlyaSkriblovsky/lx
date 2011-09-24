@@ -115,6 +115,11 @@ void Widget::paint(const Rect& dirty)
 }
 
 
+void Widget::repaint()
+{
+    repaint(Rect(Point(0, 0), size()));
+}
+
 void Widget::repaint(const Rect& dirty)
 {
     if (_parent)

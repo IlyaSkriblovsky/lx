@@ -158,7 +158,7 @@ void Window::processXEvent(XEvent *event)
 
 void Window::paint(const Rect& rect)
 {
-    fillRect(rect, 0xff444444);
+    fillRectangle(rect, 0xff444444);
 
     Widget::paint(rect);
 }
