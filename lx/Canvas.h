@@ -29,8 +29,8 @@ class Canvas
         void drawImage(const Image* image, const Point& origin);
 
         void copyCanvas(const Canvas* canvas, const Rect& src, const Point& origin);
-
         void copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& dst);
+        void copyRotatedCanvas(const Canvas* canvas, const Rect& src, const Point& origin);
 
         void drawRectangle(const Rect& rect, unsigned int color);
         void fillRectangle(const Rect& rect, unsigned int color);

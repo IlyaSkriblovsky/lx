@@ -23,6 +23,12 @@ class Size
         {
             return w == other.w && h == other.h;
         }
+
+
+        Size swapped() const
+        {
+            return Size(h, w);
+        }
 };
 
 }

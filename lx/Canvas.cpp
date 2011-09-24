@@ -96,6 +96,39 @@ void Canvas::copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& 
 }
 
 
+void Canvas::copyRotatedCanvas(const Canvas* canvas, const Rect& src, const Point& origin)
+{
+    XTransform xform = {{
+        { XDoubleToFixed(0), XDoubleToFixed(-1), XDoubleToFixed(0) },
+        { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
+        { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) },
+    }};
+    XRenderSetPictureTransform(display()->xdisplay(), canvas->xpicture(), &xform);
+
+    Point offset = absolutePosition();
+
+    XRenderComposite(
+        display()->xdisplay(), PictOpOver,
+        canvas->xpicture(), None, xpicture(),
+//        src.origin.x, src.origin.y,
+//        0, 0,
+//        origin.x + offset.x, origin.y + offset.y,
+//        src.size.w, src.size.h
+        src.origin.x, -src.size.w,
+        0, 0,
+        origin.x + offset.x, origin.y + offset.y,
+        src.size.w, src.size.h
+    );
+
+    XTransform identity = {{
+        { XDoubleToFixed(1), XDoubleToFixed(0), XDoubleToFixed(0) },
+        { XDoubleToFixed(0), XDoubleToFixed(1), XDoubleToFixed(0) },
+        { XDoubleToFixed(0), XDoubleToFixed(0), XDoubleToFixed(1) },
+    }};
+    XRenderSetPictureTransform(display()->xdisplay(), canvas->xpicture(), &identity);
+}
+
+
 void Canvas::drawRectangle(const Rect& rect, unsigned int color)
 {
     Point offset = absolutePosition();

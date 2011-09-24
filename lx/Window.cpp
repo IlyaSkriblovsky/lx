@@ -11,6 +11,21 @@ namespace lx
 LinkedList<Window*> Window::_windows;
 
 
+
+
+Window::RealCanvas::RealCanvas(): _window(0) { }
+Window::RealCanvas::RealCanvas(Window* window): _window(window) { }
+
+GC       Window::RealCanvas::xgc() const { return _window->_xgc; }
+Drawable Window::RealCanvas::xdrawable() const { return _window->_xwindow; }
+Picture  Window::RealCanvas::xpicture() const { return _window->_xpicture; }
+Display* Window::RealCanvas::display() const { return _window->_display; }
+bool     Window::RealCanvas::rgba() const { return _window->_rgba; }
+Point    Window::RealCanvas::absolutePosition() const { return Point(0, 0); }
+
+
+
+
 Window::Window(Display *display, bool rgba)
     : Widget(0), _display(display), _rgba(rgba), _mouseGrabber(0)
 {
@@ -47,6 +62,8 @@ Window::Window(Display *display, bool rgba)
         0, 0
     );
 
+
+    _realCanvas = RealCanvas(this);
 
     _buffer = new Image(_display, size(), _rgba);
 
@@ -176,14 +193,18 @@ void Window::paint(const Rect& rect)
 
 void Window::blit(const Rect& rect)
 {
-    XCopyArea(
-        _display->xdisplay(),
-        _buffer->xdrawable(), _xwindow,
-        _xgc,
-        rect.origin.x, rect.origin.y,
-        rect.size.w, rect.size.h,
-        rect.origin.x, rect.origin.y
-    );
+//    XCopyArea(
+//        _display->xdisplay(),
+//        _buffer->xdrawable(), _xwindow,
+//        _xgc,
+//        rect.origin.x, rect.origin.y,
+//        rect.size.w, rect.size.h,
+//        rect.origin.x, rect.origin.y
+//    );
+
+    // _realCanvas.drawImage(_buffer, Point());
+
+    _realCanvas.copyRotatedCanvas(_buffer, Rect(Point(), _buffer->size()), Point());
 }
 
 

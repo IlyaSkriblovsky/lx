@@ -46,6 +46,29 @@ namespace lx
             static LinkedList<Window*> _windows;
 
 
+            class RealCanvas: public Canvas
+            {
+                public:
+                    RealCanvas();
+                    RealCanvas(Window* window);
+
+                    virtual ::GC xgc() const;
+                    virtual ::Drawable xdrawable() const;
+                    virtual ::Picture xpicture() const;
+                    virtual Display* display() const;
+
+                    virtual bool rgba() const;
+
+                    virtual Point absolutePosition() const;
+
+                private:
+                    Window* _window;
+            };
+
+
+            RealCanvas _realCanvas;
+
+
             Display* _display;
 
             ::Window _xwindow;
@@ -57,6 +80,11 @@ namespace lx
             Image* _buffer;
 
             Widget* _mouseGrabber;
+
+            bool _rotated;
+
+
+            void recreateBuffer();
     };
 
 }
