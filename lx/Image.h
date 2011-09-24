@@ -16,6 +16,7 @@ class Image: public Canvas
 {
     public:
         Image(Display *display, const char *filename, bool rgba = false);
+        Image(Display* display, const Size& size, bool rgba);
         ~Image();
 
 

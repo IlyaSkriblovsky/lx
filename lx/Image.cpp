@@ -60,6 +60,27 @@ Image::Image(Display *display, const char *filename, bool rgba)
         throw Exception("Cannot create picture");
 }
 
+
+Image::Image(Display* display, const Size& size, bool rgba)
+    : _display(display), _size(size), _rgba(rgba)
+{
+    _xpixmap = XCreatePixmap(
+        _display->xdisplay(), _display->root(),
+        _size.w, _size.h,
+        rgba ? 32 : 24
+    );
+
+    _xgc = XCreateGC(_display->xdisplay(), _xpixmap, 0, 0);
+
+    _xpicture = XRenderCreatePicture(
+        _display->xdisplay(), _xpixmap,
+        _rgba ? _display->rgbaPictFormat() : _display->rgbPictFormat(),
+        0, 0
+    );
+}
+
+
+
 Image::~Image()
 {
     XRenderFreePicture(_display->xdisplay(), _xpicture);

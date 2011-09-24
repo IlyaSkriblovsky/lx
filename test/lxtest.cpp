@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     BlackWidget blackWidget(&window);
     blackWidget.setSize(480, 98);
-    blackWidget.setPosition(0, 100);
+    blackWidget.setPosition(0, 200);
 
     lx::SimpleButton playlists = lx::SimpleButton(&blackWidget, new lx::Image(&display, "playlists.png", true), new lx::Image(&display, "playlists-pressed.png", true));
     playlists.setPosition(0, 0);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     lx::SliderStyle sliderStyle(&sliderBackground, &sliderButton, 12, 26);
 
     slider = new lx::Slider(&window, &sliderStyle);
-    slider->setPosition(- sliderStyle.sideGap(), 56);
+    slider->setPosition(- sliderStyle.sideGap(), 156);
     slider->setSize(window.size().w + 2 * sliderStyle.sideGap(), slider->size().h);
 
 

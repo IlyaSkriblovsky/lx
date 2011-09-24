@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "Exception.h"
+#include "Image.h"
 
 
 namespace lx
@@ -47,6 +48,9 @@ Window::Window(Display *display, bool rgba)
     );
 
 
+    _buffer = new Image(_display, size(), _rgba);
+
+
     XSelectInput(
         _display->xdisplay(), _xwindow,
         ExposureMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask | PointerMotionHintMask
@@ -56,6 +60,8 @@ Window::Window(Display *display, bool rgba)
 
 Window::~Window()
 {
+    delete _buffer;
+
     XRenderFreePicture(_display->xdisplay(), _xpicture);
 
     XFreeGC(_display->xdisplay(), _xgc);
@@ -67,9 +73,9 @@ Window::~Window()
 
 
 
-::GC Window::xgc() const { return _xgc; }
-::Drawable Window::xdrawable() const { return _xwindow; }
-::Picture Window::xpicture() const { return _xpicture; }
+::GC Window::xgc() const { return _buffer->xgc(); }
+::Drawable Window::xdrawable() const { return _buffer->xdrawable(); }
+::Picture Window::xpicture() const { return _buffer->xpicture(); }
 bool Window::rgba() const { return _rgba; }
 
 
@@ -87,6 +93,9 @@ void Window::setVisible(bool visible)
 
 void Window::setRect(const Rect& rect)
 {
+    delete _buffer;
+    _buffer = new Image(_display, rect.size, _rgba);
+
     XMoveResizeWindow(
         _display->xdisplay(), _xwindow,
         rect.origin.x, rect.origin.y,
@@ -158,9 +167,23 @@ void Window::processXEvent(XEvent *event)
 
 void Window::paint(const Rect& rect)
 {
-    fillRectangle(rect, 0xff444444);
+    fillRectangle(rect, 0xff304050);
 
     Widget::paint(rect);
+
+    blit(rect);
+}
+
+void Window::blit(const Rect& rect)
+{
+    XCopyArea(
+        _display->xdisplay(),
+        _buffer->xdrawable(), _xwindow,
+        _xgc,
+        rect.origin.x, rect.origin.y,
+        rect.size.w, rect.size.h,
+        rect.origin.x, rect.origin.y
+    );
 }
 
 

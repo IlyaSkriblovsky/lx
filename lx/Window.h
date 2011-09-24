@@ -10,6 +10,7 @@
 namespace lx
 {
 
+    class Image;
 
     class Window: public Widget
     {
@@ -37,8 +38,9 @@ namespace lx
             virtual ::Picture xpicture() const;
             virtual bool rgba() const;
 
-        protected:
             virtual void paint(const Rect& rect);
+
+            void blit(const Rect& rect);
 
         private:
             static LinkedList<Window*> _windows;
@@ -51,6 +53,8 @@ namespace lx
             ::Picture _xpicture;
 
             bool _rgba;
+
+            Image* _buffer;
 
             Widget* _mouseGrabber;
     };
