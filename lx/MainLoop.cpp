@@ -23,14 +23,20 @@ MainLoop::~MainLoop()
 
 void MainLoop::run()
 {
+    ::Display* dpy = _display->xdisplay();
+
     while (true)
     {
-        XEvent event;
-        XNextEvent(_display->xdisplay(), &event);
+        do {
+            XEvent event;
+            XNextEvent(dpy, &event);
 
-        for (LinkedList<Window*>::Iter i = Window::windows()->head(); i; i++)
-            if ((*i)->xwindow() == event.xany.window)
-                (*i)->processXEvent(&event);
+            for (LinkedList<Window*>::Iter i = Window::windows()->head(); i; i++)
+                if ((*i)->xwindow() == event.xany.window)
+                    (*i)->processXEvent(&event);
+        } while (XPending(dpy));
+
+        XSync(dpy, False);
     }
 }
 

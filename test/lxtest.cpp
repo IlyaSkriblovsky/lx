@@ -37,7 +37,7 @@ class MainWindow: public lx::Window
     public:
         MainWindow(lx::Display* display, bool rgba): lx::Window(display, rgba)
         {
-            setBackgroundColor(lx::Color(0x40, 0x3f, 0x40));
+            setBackgroundColor(lx::Color(0x40, 0x3f, 0x40, 0x80));
 
             _buttonBox = new ColorWidget(this, lx::Color::black);
             _buttonBox->setLayout(new lx::HBox);
