@@ -24,10 +24,23 @@ class Size
             return w == other.w && h == other.h;
         }
 
+        bool operator != (const Size& other) const
+        {
+            return w != other.w || h != other.h;
+        }
+
 
         Size swapped() const
         {
             return Size(h, w);
+        }
+
+
+
+
+        void print() const
+        {
+            printf("Size(%d, %d)\n", w, h);
         }
 };
 

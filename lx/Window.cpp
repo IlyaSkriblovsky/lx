@@ -71,7 +71,9 @@ Window::Window(Display *display, bool rgba)
 
     XSelectInput(
         _display->xdisplay(), _xwindow,
-        ExposureMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask | PointerMotionHintMask
+        ExposureMask | ButtonPressMask | ButtonReleaseMask
+        | ButtonMotionMask | PointerMotionHintMask
+        | StructureNotifyMask
     );
 }
 
@@ -130,6 +132,15 @@ void Window::setRect(const Rect& rect)
 }
 
 
+void Window::setRectFromXEvent(const Rect& rect)
+{
+    Widget::setRect(rect);
+    rect.print();
+
+    recreateBuffer();
+}
+
+
 
 void Window::setBackgroundColor(const Color& color)
 {
@@ -150,7 +161,6 @@ void Window::processXEvent(XEvent *event)
                 event->xexpose.x, event->xexpose.y,
                 event->xexpose.width, event->xexpose.height
             );
-            printf("Expose: "); r.print();
             paint(r);
             break;
         }
@@ -190,6 +200,19 @@ void Window::processXEvent(XEvent *event)
 
             Widget* child = _mouseGrabber ? _mouseGrabber : childAt(p);
             child->mouseMove(p - child->absolutePosition());
+            break;
+        }
+
+        case ConfigureNotify:
+        {
+            if (Size(
+                    event->xconfigure.width, event->xconfigure.height
+                ) != size())
+                setRectFromXEvent(Rect(
+                    0, 0,
+                    event->xconfigure.width, event->xconfigure.height
+                ));
+
             break;
         }
     }

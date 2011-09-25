@@ -88,6 +88,8 @@ namespace lx
 
             void recreateBuffer();
 
+            void setRectFromXEvent(const Rect& rect);
+
 
             Color _backgroundColor;
     };

@@ -40,6 +40,11 @@ class Rect
             return origin == other.origin && size == other.size;
         }
 
+        bool operator != (const Rect& other) const
+        {
+            return origin != other.origin || size != other.size;
+        }
+
 
         Rect combine(const Rect& other) const
         {
