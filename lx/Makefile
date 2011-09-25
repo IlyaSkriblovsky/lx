@@ -10,7 +10,9 @@ SOURCES = \
     TestWidget.cpp  \
     Image.cpp       \
     BorderImage.cpp \
-    Color.cpp
+    Color.cpp       \
+    Layout.cpp      \
+    HBox.cpp
 
 
 CFLAGS = -g `pkg-config --cflags x11`

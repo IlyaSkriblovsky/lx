@@ -5,6 +5,7 @@
 #include <lx/BorderImage.h>
 #include <lx/Color.h>
 #include <lx/MainLoop.h>
+#include <lx/HBox.h>
 #include <widgets/ScalableButtonStyle.h>
 #include <widgets/ScalableButton.h>
 #include <widgets/SliderStyle.h>
@@ -31,11 +32,21 @@ class ColorWidget: public lx::Widget
 };
 
 
+lx::Window *window;
+ColorWidget *colorWidget;
+lx::SliderStyle *sliderStyle;
 lx::Slider *slider;
 
 
 void onPrev() { slider->setValue(slider->value() - 0.1); }
 void onNext() { slider->setValue(slider->value() + 0.1); }
+
+
+void onResize()
+{
+    colorWidget->setSize(window->size().w, colorWidget->size().h);
+    slider->setSize(window->size().w + 2 * sliderStyle->sideGap(), slider->size().h);
+}
 
 
 int main(int argc, char *argv[])
@@ -46,45 +57,43 @@ int main(int argc, char *argv[])
     printf("%08x\n", lx::Color(255, 0, 0, 128).uint());
 
 
-    lx::Window window(&display, true);
-    window.show();
-    window.setSize(480, 400);
-    window.setBackgroundColor(lx::Color::transparent);
+    window = new lx::Window(&display, true);
+    window->show();
+    window->setSize(480, 400);
+    window->setBackgroundColor(lx::Color::transparent);
+    window->onSetRect = onResize;
 
 
-    ColorWidget colorWidget(&window, lx::Color::black);
-    colorWidget.setSize(480, 98);
-    colorWidget.setPosition(0, 200);
+    colorWidget = new ColorWidget(window, lx::Color::black);
+    colorWidget->setSize(480, 98);
+    colorWidget->setPosition(0, 200);
+    colorWidget->setLayout(new lx::HBox);
 
-    lx::SimpleButton playlists = lx::SimpleButton(&colorWidget, new lx::Image(&display, "playlists.png", true), new lx::Image(&display, "playlists-pressed.png", true));
-    playlists.setPosition(0, 0);
+    lx::SimpleButton playlists = lx::SimpleButton(colorWidget, new lx::Image(&display, "playlists.png", true), new lx::Image(&display, "playlists-pressed.png", true));
 
-    lx::SimpleButton prev = lx::SimpleButton(&colorWidget, new lx::Image(&display, "prev.png", true), new lx::Image(&display, "prev-pressed.png", true));
-    prev.setPosition(96, 0);
+    lx::SimpleButton prev = lx::SimpleButton(colorWidget, new lx::Image(&display, "prev.png", true), new lx::Image(&display, "prev-pressed.png", true));
     prev.onClick = onPrev;
 
-    lx::SimpleButton play = lx::SimpleButton(&colorWidget, new lx::Image(&display, "play.png", true), new lx::Image(&display, "play-pressed.png", true));
-    play.setPosition(192, 0);
+    lx::SimpleButton play = lx::SimpleButton(colorWidget, new lx::Image(&display, "play.png", true), new lx::Image(&display, "play-pressed.png", true));
 
-    lx::SimpleButton next = lx::SimpleButton(&colorWidget, new lx::Image(&display, "next.png", true), new lx::Image(&display, "next-pressed.png", true));
-    next.setPosition(288, 0);
+    lx::SimpleButton next = lx::SimpleButton(colorWidget, new lx::Image(&display, "next.png", true), new lx::Image(&display, "next-pressed.png", true));
     next.onClick = onNext;
 
-    lx::SimpleButton rotate = lx::SimpleButton(&colorWidget, new lx::Image(&display, "rotate.png", true), new lx::Image(&display, "rotate-pressed.png", true));
-    rotate.setPosition(384, 0);
+    lx::SimpleButton rotate = lx::SimpleButton(colorWidget, new lx::Image(&display, "rotate.png", true), new lx::Image(&display, "rotate-pressed.png", true));
 
 
     lx::Image sliderBackground(&display, "slider-background.png", true);
     lx::Image sliderButton(&display, "slider-button.png", true);
-    lx::SliderStyle sliderStyle(&sliderBackground, &sliderButton, 12, 26);
+    sliderStyle = new lx::SliderStyle(&sliderBackground, &sliderButton, 12, 26);
 
-    slider = new lx::Slider(&window, &sliderStyle);
-    slider->setPosition(- sliderStyle.sideGap(), 156);
-    slider->setSize(window.size().w + 2 * sliderStyle.sideGap(), slider->size().h);
+    slider = new lx::Slider(window, sliderStyle);
+    slider->setPosition(- sliderStyle->sideGap(), 156);
+    slider->setSize(window->size().w + 2 * sliderStyle->sideGap(), slider->size().h);
 
 
     lx::MainLoop mainLoop(&display);
     mainLoop.run();
 
-    delete slider;
+    delete window;
+    delete sliderStyle;
 }

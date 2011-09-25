@@ -1,11 +1,13 @@
 #include "Widget.h"
 
+#include "Layout.h"
+
 namespace lx
 {
 
 
 Widget::Widget(Widget* parent)
-    : _parent(parent), _rect(0, 0, 100, 100)
+    : _parent(parent), _rect(0, 0, 100, 100), _layout(0)
 {
     if (_parent)
         _parent->addChild(this);
@@ -14,6 +16,8 @@ Widget::Widget(Widget* parent)
 
 Widget::~Widget()
 {
+    delete _layout;
+
     for (LinkedList<Widget*>::Iter i = _childs.head(); i; i++)
         delete *i;
 }
@@ -33,6 +37,9 @@ Display* Widget::display() const
 void Widget::addChild(Widget *child)
 {
     _childs.append(child);
+
+    if (_layout)
+        _layout->layout(size(), &_childs);
 }
 
 void Widget::removeChild(Widget *child)
@@ -51,6 +58,11 @@ void Widget::setVisible(bool visible)
 void Widget::setRect(const Rect& rect)
 {
     _rect = rect;
+
+    if (_layout)
+        _layout->layout(_rect.size, &_childs);
+
+    if (onSetRect) onSetRect();
 }
 
 
@@ -141,6 +153,14 @@ void Widget::mouseRelease(const Point& point)
 
 void Widget::mouseMove(const Point& point)
 {
+}
+
+
+
+void Widget::setLayout(Layout* layout)
+{
+    _layout = layout;
+    _layout->layout(size(), &_childs);
 }
 
 

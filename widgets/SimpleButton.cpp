@@ -24,7 +24,10 @@ void SimpleButton::paint(const Rect& dirty)
 {
     Image* image = _pressed ? _pressedBg : _normalBg;
 
-    drawImage(image, Point(0, 0));
+    drawImage(image, Point(
+        (size().w - image->size().w) / 2,
+        (size().h - image->size().h) / 2
+    ));
 }
 
 

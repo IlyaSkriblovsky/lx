@@ -4,12 +4,14 @@
 #include "LinkedList.h"
 #include "Rect.h"
 #include "Canvas.h"
+#include "Delegate.h"
 
 namespace lx
 {
 
 class Display;
 class DrawContext;
+class Layout;
 
 class Widget: public Canvas
 {
@@ -70,6 +72,14 @@ class Widget: public Canvas
         virtual void mouseMove(const Point& point);
 
 
+        void setLayout(Layout* layout);
+        Layout* layout() const { return _layout; }
+
+
+
+        Delegate0<> onSetRect;
+
+
     private:
         Widget *_parent;
         LinkedList<Widget*> _childs;
@@ -77,6 +87,8 @@ class Widget: public Canvas
         bool _visible;
 
         Rect _rect;
+
+        Layout* _layout;
 };
 
 }
