@@ -98,6 +98,11 @@ Window::~Window()
 ::Picture Window::xpicture() const { return _buffer->xpicture(); }
 bool Window::rgba() const { return _rgba; }
 
+Point Window::absolutePosition() const
+{
+    return Point(0, 0);
+}
+
 
 
 void Window::setVisible(bool visible)
@@ -120,25 +125,20 @@ void Window::recreateBuffer()
 
 void Window::setRect(const Rect& rect)
 {
-    XMoveResizeWindow(
-        _display->xdisplay(), _xwindow,
-        rect.origin.x, rect.origin.y,
-        rect.size.w, rect.size.h
-    );
+    if (rect != this->rect())
+    {
+        if (rect.size != this->size())
+            XResizeWindow(
+                _display->xdisplay(), _xwindow,
+                rect.size.w, rect.size.h
+            );
 
-    Widget::setRect(rect);
+        Widget::setRect(rect);
 
-    recreateBuffer();
+        recreateBuffer();
+    }
 }
 
-
-void Window::setRectFromXEvent(const Rect& rect)
-{
-    Widget::setRect(rect);
-    rect.print();
-
-    recreateBuffer();
-}
 
 
 
@@ -208,9 +208,9 @@ void Window::processXEvent(XEvent *event)
             if (Size(
                     event->xconfigure.width, event->xconfigure.height
                 ) != size())
-                setRectFromXEvent(Rect(
-                    0, 0,
-                    event->xconfigure.width, event->xconfigure.height
+                setRect(Rect(
+                    Point(0, 0),
+                    Size(event->xconfigure.width, event->xconfigure.height)
                 ));
 
             break;

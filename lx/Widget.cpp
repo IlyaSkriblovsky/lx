@@ -108,7 +108,7 @@ bool Widget::rgba() const
 
 Widget* Widget::childAt(const Point& point)
 {
-    for (LinkedList<Widget*>::Iter i = _childs.head(); i; i++)
+    for (LinkedList<Widget*>::Iter i = _childs.tail(); i; i--)
         if ((*i)->rect().contains(point))
             return (*i)->childAt(point - (*i)->position());
 

@@ -32,68 +32,97 @@ class ColorWidget: public lx::Widget
 };
 
 
-lx::Window *window;
-ColorWidget *colorWidget;
-lx::SliderStyle *sliderStyle;
-lx::Slider *slider;
-
-
-void onPrev() { slider->setValue(slider->value() - 0.1); }
-void onNext() { slider->setValue(slider->value() + 0.1); }
-
-
-void onResize()
+class MainWindow: public lx::Window
 {
-    colorWidget->setSize(window->size().w, colorWidget->size().h);
-    slider->setSize(window->size().w + 2 * sliderStyle->sideGap(), slider->size().h);
-}
+    public:
+        MainWindow(lx::Display* display, bool rgba): lx::Window(display, rgba)
+        {
+            setBackgroundColor(lx::Color(0x40, 0x3f, 0x40));
+
+            _buttonBox = new ColorWidget(this, lx::Color::black);
+            _buttonBox->setLayout(new lx::HBox);
+
+
+            new lx::SimpleButton(_buttonBox, new lx::Image(display, "playlists.png", true), new lx::Image(display, "playlists-pressed.png", true));
+
+            lx::SimpleButton* prev = new lx::SimpleButton(_buttonBox, new lx::Image(display, "prev.png", true), new lx::Image(display, "prev-pressed.png", true));
+            prev->onClick = lx::Delegate0<>(this, &MainWindow::onPrev);
+
+            new lx::SimpleButton(_buttonBox, new lx::Image(display, "play.png", true), new lx::Image(display, "play-pressed.png", true));
+
+            lx::SimpleButton* next = new lx::SimpleButton(_buttonBox, new lx::Image(display, "next.png", true), new lx::Image(display, "next-pressed.png", true));
+            next->onClick = lx::Delegate0<>(this, &MainWindow::onNext);
+
+            new lx::SimpleButton(_buttonBox, new lx::Image(display, "rotate.png", true), new lx::Image(display, "rotate-pressed.png", true));
+
+
+            _sliderBackground = new lx::Image(display, "slider-background.png", true);
+            _sliderButton = new lx::Image(display, "slider-button.png", true);
+            _sliderStyle = new lx::SliderStyle(_sliderBackground, _sliderButton, 12, 26);
+
+            _slider = new lx::Slider(this, _sliderStyle);
+
+            setSize(480, 400);
+        }
+
+        ~MainWindow()
+        {
+            delete _sliderStyle;
+            delete _sliderBackground;
+            delete _sliderButton;
+        }
+
+
+        void onPrev()
+        {
+            _slider->setValue(_slider->value() - 0.1);
+        }
+
+        void onNext()
+        {
+            _slider->setValue(_slider->value() + 0.1);
+        }
+
+
+        void layout()
+        {
+            _buttonBox->setRect(lx::Rect(
+                0, size().h - _buttonBox->size().h,
+                size().w, _buttonBox->size().h
+            ));
+
+            _slider->setPosition(- _sliderStyle->sideGap(), _buttonBox->position().y - 44);
+            _slider->setSize(size().w + 2 * _sliderStyle->sideGap(), _slider->size().h);
+        }
+
+
+        virtual void setRect(const lx::Rect& rect)
+        {
+            lx::Window::setRect(rect);
+
+            layout();
+        }
+
+
+
+    private:
+        ColorWidget* _buttonBox;
+        lx::Slider* _slider;
+
+        lx::Image* _sliderBackground;
+        lx::Image* _sliderButton;
+        lx::SliderStyle* _sliderStyle;
+};
+
 
 
 int main(int argc, char *argv[])
 {
     lx::Display display;
 
-
-    printf("%08x\n", lx::Color(255, 0, 0, 128).uint());
-
-
-    window = new lx::Window(&display, true);
-    window->show();
-    window->setSize(480, 400);
-    window->setBackgroundColor(lx::Color::transparent);
-    window->onSetRect = onResize;
-
-
-    colorWidget = new ColorWidget(window, lx::Color::black);
-    colorWidget->setSize(480, 98);
-    colorWidget->setPosition(0, 200);
-    colorWidget->setLayout(new lx::HBox);
-
-    lx::SimpleButton playlists = lx::SimpleButton(colorWidget, new lx::Image(&display, "playlists.png", true), new lx::Image(&display, "playlists-pressed.png", true));
-
-    lx::SimpleButton prev = lx::SimpleButton(colorWidget, new lx::Image(&display, "prev.png", true), new lx::Image(&display, "prev-pressed.png", true));
-    prev.onClick = onPrev;
-
-    lx::SimpleButton play = lx::SimpleButton(colorWidget, new lx::Image(&display, "play.png", true), new lx::Image(&display, "play-pressed.png", true));
-
-    lx::SimpleButton next = lx::SimpleButton(colorWidget, new lx::Image(&display, "next.png", true), new lx::Image(&display, "next-pressed.png", true));
-    next.onClick = onNext;
-
-    lx::SimpleButton rotate = lx::SimpleButton(colorWidget, new lx::Image(&display, "rotate.png", true), new lx::Image(&display, "rotate-pressed.png", true));
-
-
-    lx::Image sliderBackground(&display, "slider-background.png", true);
-    lx::Image sliderButton(&display, "slider-button.png", true);
-    sliderStyle = new lx::SliderStyle(&sliderBackground, &sliderButton, 12, 26);
-
-    slider = new lx::Slider(window, sliderStyle);
-    slider->setPosition(- sliderStyle->sideGap(), 156);
-    slider->setSize(window->size().w + 2 * sliderStyle->sideGap(), slider->size().h);
-
+    MainWindow window(&display, true);
+    window.show();
 
     lx::MainLoop mainLoop(&display);
     mainLoop.run();
-
-    delete window;
-    delete sliderStyle;
 }

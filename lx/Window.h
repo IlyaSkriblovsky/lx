@@ -37,6 +37,7 @@ namespace lx
             virtual ::Drawable xdrawable() const;
             virtual ::Picture xpicture() const;
             virtual bool rgba() const;
+            virtual Point absolutePosition() const;
 
             virtual void paint(const Rect& rect);
 
@@ -87,8 +88,6 @@ namespace lx
 
 
             void recreateBuffer();
-
-            void setRectFromXEvent(const Rect& rect);
 
 
             Color _backgroundColor;
