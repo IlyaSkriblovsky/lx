@@ -5,6 +5,7 @@
 #include <X11/extensions/Xrender.h>
 
 #include "Rect.h"
+#include "Color.h"
 
 namespace lx
 {
@@ -26,14 +27,14 @@ class Canvas
 
         void drawLine(const Point& a, const Point& b);
 
-        void drawImage(const Image* image, const Point& origin);
+        void drawImage(const Image* image, const Point& origin, bool copyAlpha = false);
 
-        void copyCanvas(const Canvas* canvas, const Rect& src, const Point& origin);
+        void copyCanvas(const Canvas* canvas, const Rect& src, const Point& origin, bool copyAlpha = false);
         void copyScaleCanvas(const Canvas* canvas, const Rect& src, const Rect& dst);
         void copyRotatedCanvas(const Canvas* canvas, const Rect& src, const Point& origin);
 
-        void drawRectangle(const Rect& rect, unsigned int color);
-        void fillRectangle(const Rect& rect, unsigned int color);
+        void drawRectangle(const Rect& rect, const Color& color);
+        void fillRectangle(const Rect& rect, const Color& color);
 };
 
 

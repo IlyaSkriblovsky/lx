@@ -23,17 +23,20 @@ void Canvas::drawLine(const Point& a, const Point& b)
 }
 
 
-void Canvas::drawImage(const Image* image, const Point& origin)
+void Canvas::drawImage(const Image* image, const Point& origin, bool copyArea)
 {
-    copyCanvas(image, Rect(Point(0, 0), image->size()), origin);
+    copyCanvas(image, Rect(Point(0, 0), image->size()), origin, copyArea);
 }
 
 
-void Canvas::copyCanvas(const Canvas* canvas, const Rect& src, const Point& origin)
+void Canvas::copyCanvas(const Canvas* canvas, const Rect& src, const Point& origin, bool copyAlpha)
 {
     Point offset = absolutePosition();
 
-    if (rgba() == false && canvas->rgba() == false)
+    if (
+        (rgba() == false && canvas->rgba() == false) ||
+        (rgba() == true && canvas->rgba() == true && copyAlpha)
+       )
     {
         XCopyArea(
             display()->xdisplay(),
@@ -129,11 +132,11 @@ void Canvas::copyRotatedCanvas(const Canvas* canvas, const Rect& src, const Poin
 }
 
 
-void Canvas::drawRectangle(const Rect& rect, unsigned int color)
+void Canvas::drawRectangle(const Rect& rect, const Color& color)
 {
     Point offset = absolutePosition();
 
-    XSetForeground(display()->xdisplay(), xgc(), color);
+    XSetForeground(display()->xdisplay(), xgc(), color.uint());
 
     XDrawRectangle(
         display()->xdisplay(), xdrawable(), xgc(),
@@ -143,11 +146,11 @@ void Canvas::drawRectangle(const Rect& rect, unsigned int color)
 }
 
 
-void Canvas::fillRectangle(const Rect& rect, unsigned int color)
+void Canvas::fillRectangle(const Rect& rect, const Color& color)
 {
     Point offset = absolutePosition();
 
-    XSetForeground(display()->xdisplay(), xgc(), color);
+    XSetForeground(display()->xdisplay(), xgc(), color.uint());
 
     XFillRectangle(
         display()->xdisplay(), xdrawable(), xgc(),

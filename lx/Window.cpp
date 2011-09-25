@@ -27,7 +27,7 @@ Point    Window::RealCanvas::absolutePosition() const { return Point(0, 0); }
 
 
 Window::Window(Display *display, bool rgba)
-    : Widget(0), _display(display), _rgba(rgba), _mouseGrabber(0)
+    : Widget(0), _display(display), _rgba(rgba), _mouseGrabber(0), _backgroundColor(Color(0, 0, 0, 0))
 {
     _windows.append(this);
 
@@ -65,7 +65,8 @@ Window::Window(Display *display, bool rgba)
 
     _realCanvas = RealCanvas(this);
 
-    _buffer = new Image(_display, size(), _rgba);
+    _buffer = 0;
+    recreateBuffer();
 
 
     XSelectInput(
@@ -108,11 +109,15 @@ void Window::setVisible(bool visible)
 }
 
 
-void Window::setRect(const Rect& rect)
+void Window::recreateBuffer()
 {
     delete _buffer;
-    _buffer = new Image(_display, rect.size, _rgba);
+    _buffer = new Image(_display, size(), _rgba);
+}
 
+
+void Window::setRect(const Rect& rect)
+{
     XMoveResizeWindow(
         _display->xdisplay(), _xwindow,
         rect.origin.x, rect.origin.y,
@@ -120,6 +125,16 @@ void Window::setRect(const Rect& rect)
     );
 
     Widget::setRect(rect);
+
+    recreateBuffer();
+}
+
+
+
+void Window::setBackgroundColor(const Color& color)
+{
+    _backgroundColor = color;
+    repaint();
 }
 
 
@@ -184,7 +199,7 @@ void Window::processXEvent(XEvent *event)
 
 void Window::paint(const Rect& rect)
 {
-    fillRectangle(rect, 0xff304050);
+    fillRectangle(rect, _backgroundColor);
 
     Widget::paint(rect);
 
@@ -193,18 +208,8 @@ void Window::paint(const Rect& rect)
 
 void Window::blit(const Rect& rect)
 {
-//    XCopyArea(
-//        _display->xdisplay(),
-//        _buffer->xdrawable(), _xwindow,
-//        _xgc,
-//        rect.origin.x, rect.origin.y,
-//        rect.size.w, rect.size.h,
-//        rect.origin.x, rect.origin.y
-//    );
-
-    // _realCanvas.drawImage(_buffer, Point());
-
-    _realCanvas.copyRotatedCanvas(_buffer, Rect(Point(), _buffer->size()), Point());
+    _realCanvas.copyCanvas(_buffer, rect, rect.origin, true);
+//    _realCanvas.copyRotatedCanvas(_buffer, Rect(Point(), _buffer->size()), Point());
 }
 
 

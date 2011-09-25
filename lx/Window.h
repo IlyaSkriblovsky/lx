@@ -42,6 +42,10 @@ namespace lx
 
             void blit(const Rect& rect);
 
+
+            Color backgroundColor() const { return _backgroundColor; }
+            void setBackgroundColor(const Color& color);
+
         private:
             static LinkedList<Window*> _windows;
 
@@ -81,10 +85,11 @@ namespace lx
 
             Widget* _mouseGrabber;
 
-            bool _rotated;
-
 
             void recreateBuffer();
+
+
+            Color _backgroundColor;
     };
 
 }

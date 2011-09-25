@@ -9,7 +9,8 @@ SOURCES = \
     Canvas.cpp      \
     TestWidget.cpp  \
     Image.cpp       \
-    BorderImage.cpp
+    BorderImage.cpp \
+    Color.cpp
 
 
 CFLAGS = -g `pkg-config --cflags x11`
