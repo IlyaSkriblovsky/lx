@@ -12,7 +12,7 @@ namespace lx
 class Display
 {
     public:
-        Display(const char *name = 0) throw(Exception);
+        Display(const char *name = 0);
         virtual ~Display();
 
 

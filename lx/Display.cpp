@@ -9,7 +9,7 @@ namespace lx
 {
 
 
-Display::Display(const char *name) throw(Exception)
+Display::Display(const char *name)
 {
     _dpy = XOpenDisplay(name);
 
