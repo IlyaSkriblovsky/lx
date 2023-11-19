@@ -37,7 +37,7 @@ class MainWindow: public lx::Window
     public:
         MainWindow(lx::Display* display, bool rgba): lx::Window(display, rgba)
         {
-            setBackgroundColor(lx::Color(0x40, 0x3f, 0x40, 0x80));
+            setBackgroundColor(lx::Color(0x3a, 0x59, 0xe7, 0x80));
 
             _buttonBox = new ColorWidget(this, lx::Color::black);
             _buttonBox->setLayout(new lx::HBox);
@@ -46,12 +46,12 @@ class MainWindow: public lx::Window
             new lx::SimpleButton(_buttonBox, new lx::Image(display, "playlists.png", true), new lx::Image(display, "playlists-pressed.png", true));
 
             lx::SimpleButton* prev = new lx::SimpleButton(_buttonBox, new lx::Image(display, "prev.png", true), new lx::Image(display, "prev-pressed.png", true));
-            prev->onClick = lx::Delegate0<>(this, &MainWindow::onPrev);
+            prev->onClick = lx::Delegate(this, &MainWindow::onPrev);
 
             new lx::SimpleButton(_buttonBox, new lx::Image(display, "play.png", true), new lx::Image(display, "play-pressed.png", true));
 
             lx::SimpleButton* next = new lx::SimpleButton(_buttonBox, new lx::Image(display, "next.png", true), new lx::Image(display, "next-pressed.png", true));
-            next->onClick = lx::Delegate0<>(this, &MainWindow::onNext);
+            next->onClick = lx::Delegate(this, &MainWindow::onNext);
 
             new lx::SimpleButton(_buttonBox, new lx::Image(display, "rotate.png", true), new lx::Image(display, "rotate-pressed.png", true));
 
@@ -61,6 +61,7 @@ class MainWindow: public lx::Window
             _sliderStyle = new lx::SliderStyle(_sliderBackground, _sliderButton, 12, 26);
 
             _slider = new lx::Slider(this, _sliderStyle);
+            _slider->onChange = lx::Delegate(this, &MainWindow::onSliderChange);
 
             setSize(480, 400);
         }
@@ -101,6 +102,12 @@ class MainWindow: public lx::Window
             lx::Window::setRect(rect);
 
             layout();
+        }
+
+        void onSliderChange(float value)
+        {
+            int color = value * 255;
+            setBackgroundColor(lx::Color(0x3a, 0x59, 0xe7, color));
         }
 
 

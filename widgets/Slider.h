@@ -23,6 +23,8 @@ class Slider: public Widget
         double value() const { return _value; }
         void setValue(double value);
 
+        Delegate1<float> onChange;
+
     private:
         const SliderStyle* _style;
 
